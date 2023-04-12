@@ -19,10 +19,10 @@ app.use(cors({
 
 
 app.use(function(_req, res, next) {
-    res.setHeader("Access-Control-Allow-Headers", " Origin,Accept,X-Requested-With,Content-Type,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization")
-    res.setHeader("Access-Control-Request-Methods","GET, POST, PUT, DELETE")
-    res.setHeader(
-        "Access-Control-Allow-Origin","*"
+    res.header(
+        "Access-Control-Allow-Tabletheaders",
+        "x-access-token, Origin, Content-Type, Accept",
+        "Access-Control-Allow-Origin", "*"
     );
     next();
 });
