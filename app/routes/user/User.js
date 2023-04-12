@@ -13,17 +13,16 @@ const corsOptions = {
 const app = express()
 
 app.use(cors({
-    origin:process.env.ORIGIN,
+    origin:true,
     credentials: true
 }))
 
 
 app.use(function(_req, res, next) {
     res.header(
-        "Access-Control-Allow-Tabletheaders",
-        "x-access-token, Origin, Content-Type, Accept",
-        "Access-Control-Allow-Origin", "*"
+        "Access-Control-Allow-Tabletheaders", "x-access-token, Origin, Content-Type, Accept"
     );
+    res.header("Access-Control-Allow-Origin", "*")
     next();
 });
 
