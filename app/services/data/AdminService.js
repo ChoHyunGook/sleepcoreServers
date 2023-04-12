@@ -1,6 +1,5 @@
 import db from '../../DataBase/index.js'
 import applyDotenv from "../../Lambdas/applyDotenv.js";
-import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 dotenv.config()
@@ -14,7 +13,6 @@ export default function AdminService(){
 
     const User = db.User
 
-    const temUser = db.WithdrawTemUser
 
 
     return{
@@ -248,6 +246,57 @@ export default function AdminService(){
                 }
             }
         },
+
+        changeStartUp(req,res){
+            try {
+                const sendData = req.body
+                const startUpChange = sendData.StartUpChange
+                const data =sendData.selectedData
+                const userIds = data.map(e=>e.id)
+                let inputData=[]
+
+
+                User.find({userId:userIds}, function (err,user){
+
+                    user.filter((startUp)=>{
+                        let dbs={
+                            userId:startUp.userId,
+                            start_up:startUpChange
+                        }
+                        inputData.push(dbs)
+
+                    })
+
+                    User.bulkWrite(inputData.map((item)=>({
+                                updateOne: {
+                                    filter: {userId: item.userId},
+                                    update: {$set:item},
+                                    upsert: true
+                                }
+                            })
+                        )
+                        ,function (err,updateUser){
+                            if(err){
+                                res.status(400).send(err)
+                            }else {
+                                let userName = user.map(e=>e.name)
+                                if(startUpChange === true){
+                                    res.status(200).send(`${userName} 님이 개통처리 되었습니다.`)
+                                }else{
+                                    res.status(200).send(`${userName} 님이 개통취소처리 되었습니다.`)
+                                }
+                            }
+                        })
+                })
+
+
+            }catch (e){
+                if(e.name === 'TokenExpiredError'){
+                    res.status(500).send('인증시간이 만료되었습니다.')
+                }
+            }
+        },
+
 
         changeAdmin(req,res){
             try {

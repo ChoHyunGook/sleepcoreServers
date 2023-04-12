@@ -45,6 +45,10 @@ app.post('/search',cors(corsOptions),(req,res)=>{
     AdminService().find(req,res)
 })
 
+app.post('/changeStartUp',(cors(corsOptions)),(req,res)=>{
+    AdminService().changeStartUp(req,res)
+})
+
 app.post('/changeAdmin',cors(corsOptions),(req,res)=>{
     AdminService().changeAdmin(req,res)
 })
