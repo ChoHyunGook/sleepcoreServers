@@ -17,6 +17,10 @@ async function startServer(){
     dotenv.config()
     const app =express()
 
+    app.use(cors({
+        origin:true,
+        credentials: true
+    }))
 
     const {mongoUri ,port, DB_NAME } = applyDotenv(dotenv)
 
@@ -27,6 +31,15 @@ async function startServer(){
     app.use(express.json()); // json 사용 하는 경우의 세팅
 
     app.use(cookieParser())
+
+    app.use(function(_req, res, next) {
+        res.setHeader("Access-Control-Allow-Headers", " Origin,Accept,X-Requested-With,Content-Type,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization")
+        res.setHeader("Access-Control-Request-Methods","GET, POST, PUT, DELETE")
+        res.setHeader(
+            "Access-Control-Allow-Origin","*"
+        );
+        next();
+    });
 
 
     // 몽고디비 전용 EXPRESS 몽구스
