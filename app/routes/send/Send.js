@@ -19,8 +19,10 @@ app.use(cors({
 }))
 
 app.use(function(_req, res, next) {
+    res.header("Access-Control-Allow-Headers", " Origin,Accept,X-Requested-With,Content-Type,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization")
+    res.header("Access-Control-Request-Methods","GET, POST, PUT, DELETE")
     res.header(
-        "Access-Control-Allow-Origin", "*"
+        "Access-Control-Allow-Origin", process.env.ORIGIN
     );
     next();
 });
