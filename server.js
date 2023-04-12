@@ -27,8 +27,6 @@ async function startServer(){
     app.use(express.json()); // json 사용 하는 경우의 세팅
 
     app.use(cookieParser())
-    app.use(cors())
-
 
 
     // 몽고디비 전용 EXPRESS 몽구스

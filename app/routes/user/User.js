@@ -20,9 +20,8 @@ app.use(cors({
 
 app.use(function(_req, res, next) {
     res.header(
-        "Access-Control-Allow-Tabletheaders", "x-access-token, Origin, Content-Type, Accept"
+        "Access-Control-Allow-Origin", "*"
     );
-    res.header("Access-Control-Allow-Origin", "*")
     next();
 });
 
