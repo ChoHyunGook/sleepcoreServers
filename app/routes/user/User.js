@@ -29,7 +29,7 @@ app.use(function(_req, res, next) {
 
 
 
-app.post('/register',cors(corsOptions),(req,res)=>{
+app.post('/register', cors(corsOptions), (req,res)=>{
     UserService().register(req,res)
 })
 

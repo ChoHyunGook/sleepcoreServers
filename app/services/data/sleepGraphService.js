@@ -1,5 +1,5 @@
-import db from '../../../DataBase/index.js'
-import applyDotenv from "../../../Lambdas/applyDotenv.js";
+import db from '../../DataBase/index.js'
+import applyDotenv from "../../Lambdas/applyDotenv.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import moment from "moment-timezone";

@@ -1,10 +1,13 @@
 import express from 'express'
 import morgan from 'morgan'
 import dotenv from "dotenv";
-import applyDotenv from "./Lambdas/applyDotenv.js";
-import ResponseService from "./Lambdas/response.js";
 import cookieParser from "cookie-parser";
-import db from  './DataBase/index.js'
+
+import db from './app/DataBase/index.js'
+import applyDotenv from "./app/Lambdas/applyDotenv.js";
+import ResponseService from "./app/Lambdas/response.js";
+
+
 import User from './app/routes/user/User.js'
 import Send from './app/routes/send/Send.js'
 import Check from './app/routes/supervise/TokenCheck.js'
@@ -17,12 +20,8 @@ async function startServer(){
     dotenv.config()
     const app =express()
 
-    app.use(cors({
-        origin:true,
-        credentials: true
-    }))
-
     const {mongoUri ,port, DB_NAME } = applyDotenv(dotenv)
+
 
     //post 방식 일경우 begin
     //post 의 방식은 url 에 추가하는 방식이 아니고 body 라는 곳에 추가하여 전송하는 방식
@@ -32,17 +31,6 @@ async function startServer(){
 
     app.use(cookieParser())
 
-    app.use(function(_req, res, next) {
-        res.setHeader("Access-Control-Allow-Headers", " Origin,Accept,X-Requested-With,Content-Type,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization")
-        res.setHeader("Access-Control-Request-Methods","GET, POST, PUT, DELETE")
-        res.setHeader(
-            "Access-Control-Allow-Origin","*"
-        );
-        next();
-    });
-
-
-    // 몽고디비 전용 EXPRESS 몽구스
     //DB 연결 확인
     db.mongoose.set('strictQuery', false);
     db
@@ -72,6 +60,9 @@ async function startServer(){
             return responseService.unauthorizedResponse(res, err.message);
         }
     });
+
+
+
 
     app.listen(port, () => {
         console.log('***************** ***************** *****************')
