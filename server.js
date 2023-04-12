@@ -11,6 +11,7 @@ import Check from './app/routes/supervise/TokenCheck.js'
 import Sleep from "./app/routes/data/SleepGraph.js";
 import Modify from "./app/routes/user/Modify.js"
 import Admin from "./app/routes/data/Admin.js"
+import cors from "cors";
 
 async function startServer(){
     dotenv.config()
@@ -26,6 +27,7 @@ async function startServer(){
     app.use(express.json()); // json 사용 하는 경우의 세팅
 
     app.use(cookieParser())
+    app.use(cors())
 
 
 
