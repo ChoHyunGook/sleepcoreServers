@@ -2,12 +2,13 @@ import db from '../../DataBase/index.js'
 import applyDotenv from "../../Lambdas/applyDotenv.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import e from "express";
 dotenv.config()
 
 
 export default function TokenCheckService(){
 
-    const { access_jwt_secret, AUTH_INFO_SECRET }=applyDotenv(dotenv)
+    const { access_jwt_secret, AUTH_INFO_SECRET, AUTH_LOGIN_SECRET, AUTHID ,AUTHPW }=applyDotenv(dotenv)
 
     const User = db.User
 
@@ -121,7 +122,7 @@ export default function TokenCheckService(){
 
         authInfoCheck(req,res){
             try {
-                const token =req.cookies.accessToken
+                const token =req.cookies.authInfoToken
                 const verify = jwt.verify(token, AUTH_INFO_SECRET)
                 if(verify.authInfo === 'Ok'){
                     console.log(1)
@@ -136,6 +137,45 @@ export default function TokenCheckService(){
             }catch (e){
                 if(e.name === 'TokenExpiredError'){
                     res.status(500).send('인증시간이 만료되었습니다.')
+                }
+            }
+        },
+
+        authLogin(req,res){
+
+            if(req.body.authId === AUTHID){
+                if(req.body.password === AUTHPW){
+
+                    const authLoginToken = jwt.sign({
+                        authSign:'BlaubitAdminOK'
+                    },AUTH_LOGIN_SECRET,{expiresIn:'60m'})
+
+                    res.cookie('authLoginToken',authLoginToken,{
+                        secure: false,
+                        httpOnly: true
+                    })
+
+                    res.status(200).send('관리자 로그인 성공')
+                }else {
+                    res.status(400).send('관리자 비밀번호 불일치')
+                }
+            }else{
+                res.status(400).send('관리자 아이디 불일치')
+            }
+        },
+        authLoginCheck(req,res){
+            try {
+                const token = req.cookies.authLoginToken
+                jwt.verify(token, AUTH_LOGIN_SECRET,(err)=>{
+                    if(err){
+                        res.status(400).send('관리자로그인 X')
+                    }else {
+                        res.status(200).send('authLoginOk')
+                    }
+                })
+            }catch (e){
+                if(e.name === 'TokenExpiredError'){
+                    res.status(500).send('관리자 인증시간이 만료되었습니다.')
                 }
             }
         }

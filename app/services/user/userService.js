@@ -117,6 +117,7 @@ export default function UserService(){
         logout(req,res){
             try {
                 res.clearCookie('accessToken')
+                res.clearCookie('authLoginToken')
                 res.status(200).json({message: "logout success"})
             } catch (err) {
                 res.status(400).json(err)

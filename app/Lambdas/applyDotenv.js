@@ -17,7 +17,10 @@ const applyDotenv = dotenv => {
         NODEMAILER_USER:process.env.NODEMAILER_USER,
         NODEMAILER_PASS:process.env.NODEMAILER_PASS,
         authNum_jwt_secret:process.env.authNum_jwt_secret,
-        AUTH_INFO_SECRET:process.env.AUTH_INFO_SECRET
+        AUTH_INFO_SECRET:process.env.AUTH_INFO_SECRET,
+        AUTH_LOGIN_SECRET:process.env.AUTH_LOGIN_SECRET,
+        AUTHID:process.env.AUTHID,
+        AUTHPW:process.env.AUTHPW
     }
 }
 

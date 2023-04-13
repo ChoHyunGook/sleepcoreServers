@@ -49,5 +49,14 @@ app.get('/authInfoCheck',cors(corsOptions),(req,res)=>{
     tokenCheckService().authInfoCheck(req,res)
 })
 
+app.get('/authLoginCheck',cors(corsOptions),(req,res)=>{
+
+    tokenCheckService().authLoginCheck(req,res)
+})
+
+app.post('/authLogin',cors(corsOptions),(req,res)=>{
+    tokenCheckService().authLogin(req,res)
+})
+
 
 export default app
