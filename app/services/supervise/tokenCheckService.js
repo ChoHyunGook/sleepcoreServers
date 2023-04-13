@@ -34,11 +34,15 @@ export default function TokenCheckService(){
         LoginCheck(req,res){
             try {
                 const token = req.cookies.accessToken
+                const verify = jwt.verify(token,access_jwt_secret)
                 jwt.verify(token,access_jwt_secret,(err)=>{
                     if(err){
                         res.status(400).send(err)
                     }else{
-                        res.status(200).send('Login 중...')
+                        User.findOne({userId:verify.userId},function (err,user){
+                            if(err) throw(err)
+                            res.status(200).send(user.admin)
+                        })
                     }
                 })
             }catch (e){
@@ -48,26 +52,6 @@ export default function TokenCheckService(){
             }
         },
 
-        adminCheck(req,res){
-         try {
-             const token =req.cookies.accessToken
-             const verify = jwt.verify(token,access_jwt_secret)
-
-             User.findOne({userId:verify.userId},function (err,user){
-                 if(err) throw(err)
-                 if(user.admin === false){
-                     res.status(400).send('Normal Member')
-                 }else {
-                     res.status(200).send('Admin Member')
-                 }
-             })
-
-            }   catch (e){
-             if(e.name === 'TokenExpiredError'){
-                 res.status(500).send('인증시간이 만료되었습니다.')
-             }
-         }
-        },
 
         accessTokenData(req,res){
             try {
@@ -125,7 +109,6 @@ export default function TokenCheckService(){
                 const token =req.cookies.authInfoToken
                 const verify = jwt.verify(token, AUTH_INFO_SECRET)
                 if(verify.authInfo === 'Ok'){
-                    console.log(1)
                     User.findOne({userId:verify.userId},function (err,user){
                         if(err) throw(err)
                         res.status(200).send(user)

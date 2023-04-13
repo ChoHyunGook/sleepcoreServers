@@ -36,9 +36,7 @@ app.get('/allTokenDel', cors(corsOptions),(req,res)=>{
 app.get('/loginCheck',cors(corsOptions),(req,res)=>{
     tokenCheckService().LoginCheck(req,res)
 })
-app.get('/adminCheck',cors(corsOptions),(req,res)=>{
-    tokenCheckService().adminCheck(req,res)
-})
+
 app.get('/getAccessTokenData',cors(corsOptions),(req,res)=>{
     tokenCheckService().accessTokenData(req,res)
 })
