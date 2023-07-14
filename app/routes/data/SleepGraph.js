@@ -30,6 +30,13 @@ app.get('/getData',cors(corsOptions),(req,res)=>{
 app.get('/getWeekData',cors(corsOptions),(req,res)=>{
     SleepGraphService().getWeekData(req,res)
 })
+app.get('/weekcore',cors(corsOptions),(req,res)=>{
+    SleepGraphService().weekCores(req,res)
+})
+
+app.get('/monthCore',cors(corsOptions),(req,res)=>{
+    SleepGraphService().monthCore(req,res)
+})
 
 
 export default app

@@ -131,7 +131,7 @@ export default function TokenCheckService(){
 
                     const authLoginToken = jwt.sign({
                         authSign:'BlaubitAdminOK'
-                    },AUTH_LOGIN_SECRET,{expiresIn:'60m'})
+                    },AUTH_LOGIN_SECRET,{expiresIn:'180m'})
 
                     res.cookie('authLoginToken',authLoginToken,{
                         secure: false,
