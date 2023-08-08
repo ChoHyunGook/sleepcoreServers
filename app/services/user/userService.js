@@ -36,7 +36,7 @@ export default function UserService(){
                                             } else {
                                                 res.status(200)
                                                     .clearCookie('termsToken', '')
-                                                    .json({message: '회원가입 성공!!!!!!', data: User})
+                                                    .json({message: '회원가입 성공.', data: User})
                                             }
                                         })
                                     } else {
@@ -82,7 +82,7 @@ export default function UserService(){
           },function (err,user) {
               if(err) throw err
               if(!user){
-                  res.status(400).send('해당 ID가 존재하지 않습니다.')
+                  res.status(400).send('해당 ID로 가입된 정보가 존재하지 않습니다.')
               }else {
                   user.comparePassword(req.body.password,function (_err, isMatch){
                       if(!isMatch){
@@ -101,7 +101,8 @@ export default function UserService(){
                               })
 
                               res.status(200).clearCookie('termsToken')
-                                  .send('Success')
+                                  .send(user)
+
 
 
                           }catch (err){
