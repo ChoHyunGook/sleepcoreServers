@@ -44,6 +44,9 @@ app.post('/login',cors(corsOptions),(req,res)=>{
 app.get('/logout',cors(corsOptions),(req,res)=>{
     UserService().logout(req,res)
 })
+app.post('/findService',cors(corsOptions),(req,res)=>{
+    UserService().findService(req,res)
+})
 
 
 

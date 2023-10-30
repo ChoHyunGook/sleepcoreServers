@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import CryptoJS from 'crypto-js';
 import axios from "axios";
 import bcrypt from "bcrypt";
+import EmailService from "./EmailService.js";
 
 
 dotenv.config()
@@ -43,6 +44,102 @@ export default function SMS_service(){
     let authNum = String(Math.floor(Math.random() * 1000000)).padStart(6, "0");
 
     return {
+        FindService(req,res){
+            const data =req.body
+            if(data.name !== undefined){
+                User.findOne({name:data.name,phone:data.phone})
+                    .then(user=>{
+                        if(!user){
+                            res.status(400).send('가입된 정보가 없습니다.')
+                        }else{
+                            const user_phone = req.body.phone
+                            const phoneNumber = user_phone.split("-").join("");
+                            const phoneSubject = req.body.phoneSubject
+
+                            const authNumToken = jwt.sign({
+                                authNum: authNum,
+                                name:data.name,
+                                phone: req.body.phone,
+                            }, authNum_jwt_secret, {expiresIn: '3m'})
+
+
+                            res.cookie("authNumToken", authNumToken, {
+                                secure: false,
+                                httpOnly: true
+                            })
+
+                            axios({
+                                method: method,
+                                json: true,
+                                url: url,
+                                headers: {
+                                    "Contenc-type": "application/json; charset=utf-8",
+                                    "x-ncp-iam-access-key": accessKey,
+                                    "x-ncp-apigw-timestamp": date
+                                    ,
+                                    "x-ncp-apigw-signature-v2": signature,
+                                },
+                                data: {
+                                    type: "SMS",
+                                    countryCode: "82",
+                                    from: smsPhone,
+                                    content: `[Sleepcore]\n[${phoneSubject} 서비스]\n인증번호는 [${authNum}] 입니다.`,
+                                    messages: [{to: `${phoneNumber}`}],
+                                },
+                            });
+                            return res.status(200).send('인증번호가 전송되었습니다. 인증번호 유효시간은 3분입니다.')
+                        }
+                    })
+            }else{
+                if(data.userId !== undefined){
+                    EmailService().findPwEmail(req,res)
+                }else{
+                    User.findOne({phone:data.phone})
+                        .then(user=>{
+                            if(!user){
+                                res.status(400).send('가입된 정보가 없습니다.')
+                            }else{
+                                const user_phone = req.body.phone
+                                const phoneNumber = user_phone.split("-").join("");
+                                const phoneSubject = req.body.phoneSubject
+
+                                const authNumToken = jwt.sign({
+                                    authNum: authNum,
+                                    phone: req.body.phone,
+                                }, authNum_jwt_secret, {expiresIn: '3m'})
+
+
+                                res.cookie("authNumToken", authNumToken, {
+                                    secure: false,
+                                    httpOnly: true
+                                })
+
+                                axios({
+                                    method: method,
+                                    json: true,
+                                    url: url,
+                                    headers: {
+                                        "Contenc-type": "application/json; charset=utf-8",
+                                        "x-ncp-iam-access-key": accessKey,
+                                        "x-ncp-apigw-timestamp": date
+                                        ,
+                                        "x-ncp-apigw-signature-v2": signature,
+                                    },
+                                    data: {
+                                        type: "SMS",
+                                        countryCode: "82",
+                                        from: smsPhone,
+                                        content: `[Sleepcore]\n[${phoneSubject} 서비스]\n인증번호는 [${authNum}] 입니다.`,
+                                        messages: [{to: `${phoneNumber}`}],
+                                    },
+                                });
+                                return res.status(200).send('인증번호가 전송되었습니다. 인증번호 유효시간은 3분입니다.')
+                            }
+                        })
+                }
+
+            }
+        },
         RegisterSMS(req,res) {
             const data = req.body
 
@@ -55,7 +152,6 @@ export default function SMS_service(){
                     const phoneNumber = user_phone.split("-").join("");
                     const phoneSubject = req.body.phoneSubject
 
-                    console.log(authNum)
                     const authNumToken = jwt.sign({
                         authNum: authNum,
                         phone: req.body.phone,

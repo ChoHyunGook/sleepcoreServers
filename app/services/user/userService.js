@@ -2,6 +2,7 @@ import db from '../../DataBase/index.js'
 import applyDotenv from "../../Lambdas/applyDotenv.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import bcrypt from "bcrypt";
 dotenv.config()
 
 export default function UserService(){
@@ -12,6 +13,83 @@ export default function UserService(){
 
 
     return{
+        findService(req,res){
+            try{
+                const data = req.body
+                const tokenData = req.cookies.authNumToken
+                const verify = jwt.verify(tokenData, authNum_jwt_secret)
+                if(data.authNum !== verify.authNum){
+                    res.status(400).send('인증번호가 불일치 합니다.')
+                }else{
+                    if(data.changePw === true){
+                        if(data.userId === undefined){
+                            User.findOne({phone:data.phone})
+                                .then(findData=>{
+                                    const userIdData = {userId:findData.userId}
+                                    const bcryptPwData = bcrypt.hashSync(data.password, 10)
+                                    const insertPwData = {password: bcryptPwData}
+                                    User.findOneAndUpdate(userIdData,{$set:insertPwData},{upsert:true})
+                                        .then(user=>{
+                                            res.status(200).clearCookie('authNumToken', '').send('비밀번호 변경완료')
+                                        })
+                                })
+                        }else{
+                            const userIdData = {userId:data.userId}
+                            const bcryptPwData = bcrypt.hashSync(data.password, 10)
+                            const insertPwData = {password: bcryptPwData}
+                            User.findOneAndUpdate(userIdData,{$set:insertPwData},{upsert:true})
+                                .then(user=>{
+                                    res.status(200).clearCookie('authNumToken', '').send('비밀번호 변경완료')
+                                })
+                        }
+                    }else if(data.name !== undefined){
+                        User.findOne({name:data.name,phone:data.phone})
+                            .then(findData=>{
+                                res.status(200).send(findData)
+                            })
+                    }else{
+                        if(data.userId === undefined){
+                            User.findOne({phone:data.phone})
+                                .then(findData=>{
+                                    if(!findData){
+                                        res.status(400).send('가입 되어있는 전화번호가 없습니다.')
+                                    }else{
+                                        let sendData = {
+                                            data:findData,
+                                            authNum:data.authNum
+                                        }
+                                        res.status(200).json({data:sendData,msg:'인증완료'})
+                                    }
+                                })
+                                .catch(err=>{
+                                    res.status(400).send(err)
+                                })
+                        }else{
+                            User.findOne({userId:data.userId})
+                                .then(findData=>{
+                                    if(!findData){
+                                        res.status(400).send('가입 되어있는 아이디가 없습니다.')
+                                    }else{
+                                        let sendData = {
+                                            data:findData,
+                                            authNum:data.authNum
+                                        }
+                                        res.status(200).json({data:sendData,msg:'인증완료'})
+                                    }
+
+                                })
+                                .catch(err=>{
+                                    res.status(400).send(err)
+                                })
+                        }
+                    }
+                }
+            }catch (e) {
+                if(e.name === 'TokenExpiredError'){
+                    res.status(500).send('인증시간이 만료되었습니다.')
+                }
+            }
+        },
         register(req,res){
             try{
                 const data = req.body
@@ -92,7 +170,9 @@ export default function UserService(){
                               const accessToken = jwt.sign({
                                   userId:user.userId,
                                   name:user.name,
-                                  phone:user.phone
+                                  phone:user.phone,
+                                  admin:user.admin,
+                                  startUp:user.start_up
                               },access_jwt_secret,{expiresIn:'1h'})
 
                               res.cookie('accessToken',accessToken,{

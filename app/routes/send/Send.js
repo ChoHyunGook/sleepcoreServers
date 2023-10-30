@@ -47,6 +47,9 @@ app.post('/modifyPhoneSMS',cors(corsOptions),(req,res)=>{
 app.post('/modifyUserIdEmail',cors(corsOptions),(req,res)=>{
     EmailService().modifyUserIdEmail(req,res)
 })
+app.post('/findInfoSMS',cors(corsOptions),(req,res)=>{
+    SMS_service().FindService(req,res)
+})
 
 
 export default app
