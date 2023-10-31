@@ -44,6 +44,7 @@ export default function SMS_service(){
     let authNum = String(Math.floor(Math.random() * 1000000)).padStart(6, "0");
 
     return {
+
         FindService(req,res){
             const data =req.body
             if(data.name !== undefined){
