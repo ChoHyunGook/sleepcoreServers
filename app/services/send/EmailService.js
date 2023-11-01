@@ -41,7 +41,7 @@ export default function EmailService(){
             transporter.sendMail({
                 from: `SleepCore`,
                 to: "danielcho@blaubit.co.kr",
-                subject: `[DoorBellSquare] [${contact}] 1:1문의 요청`,
+                subject: `[Sleepcore] [${contact}] 1:1문의 요청`,
                 text: `문의유형 : ${contact} \n
                 답변 요청 유형 : ${answer} \n
                 답변 받을 이메일 또는 전화번호 : ${data.phone.length === 0 ? data.userId : data.phone} \n

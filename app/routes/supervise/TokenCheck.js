@@ -25,6 +25,7 @@ app.use(function(_req, res, next) {
     next();
 });
 
+
 app.get('/termsAgreeCheck',cors(corsOptions),(req,res)=>{
     tokenCheckService().termsAgreeCheck(req,res)
 })
