@@ -160,12 +160,6 @@ export default function SleepGraphService(){
                     .then(user=>{
                         const start = thTime.split('-')
                         const end = now.split('-')
-                        if (Number(start[2]) <= 9) {
-                            start[2] = '0' + start[2]
-                        }
-                        if (Number(end[2]) <= 9) {
-                            end[2] = '0' + end[2]
-                        }
 
                         let pushData = []
                         user.map(items=>{
