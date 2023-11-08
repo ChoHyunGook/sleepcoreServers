@@ -153,7 +153,7 @@ export default function SleepGraphService(){
 
                 let now = moment().tz('Asia/Seoul').format('YYYY-MM-DD')
 
-                let thTime = moment(now).subtract("1","M").format('YYYY-MM-DD')
+                let thTime = moment(now).subtract("30","d").format('YYYY-MM-DD')
 
 
                 Sleep.find({userId:verify.userId}).sort({'date':1})
