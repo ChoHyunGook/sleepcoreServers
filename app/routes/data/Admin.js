@@ -2,6 +2,9 @@ import express from "express";
 import cors from "cors"
 import dotenv from "dotenv"
 import AdminService from "../../services/data/AdminService.js";
+import multer from "multer"
+var storage = multer.memoryStorage()
+var upload = multer({storage: storage});
 dotenv.config()
 
 

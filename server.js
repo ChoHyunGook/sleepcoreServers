@@ -14,6 +14,7 @@ import Check from './app/routes/supervise/TokenCheck.js'
 import Sleep from "./app/routes/data/SleepGraph.js";
 import Modify from "./app/routes/user/Modify.js"
 import Admin from "./app/routes/data/Admin.js"
+import News from "./app/routes/data/News.js"
 
 
 async function startServer(){
@@ -51,6 +52,7 @@ async function startServer(){
     app.use('/sleep', Sleep)
     app.use('/modify',Modify)
     app.use('/admin',Admin)
+    app.use('/news',News)
 
     app.use(morgan('dev'))
 
