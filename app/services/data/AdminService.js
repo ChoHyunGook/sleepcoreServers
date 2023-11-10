@@ -100,12 +100,11 @@ export default function AdminService(){
                         } else {
                             const pwData = data.password
                             const bcryptPwData = bcrypt.hashSync(pwData, 10)
-                            const insertPwData = {password: bcryptPwData}
 
                             let updateData = {
                                 userId: data.userId,
                                 name: data.name,
-                                password: insertPwData,
+                                password: bcryptPwData,
                                 admin: (data.admin === 'O') ? true : false,
                                 phone: data.phone
                             }
